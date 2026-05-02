@@ -1,0 +1,67 @@
+
+@startuml
+actor investor as inv
+boundary HomePage as hm
+boundary TransferForm as tf
+boundary  transferServlet as ts
+database Database  as db
+participant stripe as sp
+note over sp: banking service
+inv -> hm : select transfer money
+activate hm
+hm -> tf: display form
+deactivate hm
+activate tf
+inv -> tf: fill form and submit
+tf-> ts: transfer request
+activate ts
+alt successfully transfered
+activate sp
+ts -> sp : withdraw/deposit request
+sp --> ts:transfer success response
+deactivate sp
+activate db
+ts -> db: store succesful transaction
+deactivate db
+ts ->tf : display success message
+else transfer rejected
+activate sp
+ts -> sp : withdraw/deposit request
+sp -->ts: transfer rejection response
+deactivate sp
+activate db
+ts -> db: store rejected transaction
+deactivate db
+ts -> tf: dispaly failure message
+else transfer pending
+activate sp
+ts -> sp : withdraw/deposit request
+sp -->ts: transfer pending response
+deactivate sp
+activate db
+ts -> db: store pending transaction
+deactivate db
+ts->tf : display pending message
+end
+deactivate tf
+deactivate ts
+@enduml
+
+
+' @startuml
+' participant Participant as Foo
+' actor       Actor       as Foo1
+' boundary    Boundary    as Foo2
+' control     Control     as Foo3
+' entity      Entity      as Foo4
+' database    Database    as Foo5
+' collections Collections as Foo6
+' queue       Queue       as Foo7
+' Foo -> Foo1 : To actor 
+' Foo -> Foo2 : To boundary
+' Foo -> Foo3 : To control
+' Foo -> Foo4 : To entity
+' Foo -> Foo5 : To database
+' Foo -> Foo6 : To collections
+' Foo -> Foo7: To queue
+' @enduml

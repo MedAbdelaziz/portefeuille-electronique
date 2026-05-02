@@ -1,4 +1,15 @@
 cells:
+  - kind: 2
+    value: "drop table holdings;\r
+
+      drop table transactions;\r
+
+      drop table assets;\r
+
+      drop table wallets;\r
+
+      drop table users;"
+    languageId: oracle-sql
   - kind: 1
     value: creation de la table Users(Utilisateur)
     languageId: markdown
@@ -29,7 +40,7 @@ cells:
       );\r\n"
     languageId: oracle-sql
   - kind: 1
-    value: creation de la table Wallets(portfeuil electronique)
+    value: creation de la table Wallets(portefeuille electronique)
     languageId: markdown
   - kind: 2
     value: "create table wallets(\r
@@ -55,11 +66,7 @@ cells:
     value: creation de la table Assets(Actifs)
     languageId: markdown
   - kind: 2
-    value: "drop table holdings;\r
-
-      drop table assets;\r
-
-      create table assets(\r
+    value: "create table assets(\r
 
       \    asset_id Integer PRIMARY KEY not null,\r
 
@@ -374,6 +381,162 @@ cells:
       INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
       average_purchase_price, last_updated_at) VALUES (10, 9, 3, 2, 5000.00,
       TIMESTAMP '2023-09-15 13:45:00');"
+    languageId: oracle-sql
+  - kind: 1
+    value: "Affichage table Users "
+    languageId: markdown
+  - kind: 2
+    value: select * from users
+    languageId: oracle-sql
+  - kind: 1
+    value: Affichage table Wallets
+    languageId: markdown
+  - kind: 2
+    value: select * from wallets
+    languageId: oracle-sql
+  - kind: 1
+    value: Affichage table Transactions
+    languageId: markdown
+  - kind: 2
+    value: select * from TRANSACTIONS
+    languageId: oracle-sql
+  - kind: 1
+    value: Affichage table Assets
+    languageId: markdown
+  - kind: 2
+    value: select * from assets;
+    languageId: oracle-sql
+  - kind: 1
+    value: Affichage table Holdings
+    languageId: markdown
+  - kind: 2
+    value: select * from HOLDINGS;
+    languageId: oracle-sql
+  - kind: 2
+    value: commit;
+    languageId: oracle-sql
+  - kind: 1
+    value: getAllTransactionsById function
+    languageId: markdown
+  - kind: 2
+    value: "Set SERVEROUTPUT on;\r
+
+      create or replace procedure getAllTransactionsById(id INTEGER) is \r
+
+      BEGIN\r
+
+      \    declare\r
+
+      \        Cursor getAllTransactionsById_cur is\r
+
+      \            Select us.first_name, \r
+
+      \            us.last_name, \r
+
+      \            us.email, \r
+
+      \            us.kyc_status, \r
+
+      \            w.wallet_id,        \r
+
+      \            w.currency_code, \r
+
+      \            tr.transaction_id, \r
+
+      \            tr.transaction_type, \r
+
+      \            tr.status \r
+
+      \            from transactions tr join wallets w \r
+
+      \            on tr.wallet_id = w.wallet_id \r
+
+      \            join users us on w.user_id = us.user_id\r
+
+      \            where  us.user_id = id\r
+
+      \            order by w.wallet_id;\r
+
+      \r
+
+      \        tr getAllTransactionsById_cur%rowtype ;\r
+
+      \        aux wallets.WALLET_ID%TYPE:= -1;\r
+
+      \        firstline numeric :=1;\r
+
+      \    begin\r
+
+      \        DBMS_OUTPUT.PUT_LINE('USER ID:'|| id);\r
+
+      \        \r
+
+      \        for tr in getAllTransactionsById_cur Loop\r
+
+      \            if firstline = 1 THEN\r
+
+      \                DBMS_OUTPUT.PUT_LINE('USER FIRSTNAME:'||
+      tr.first_name);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('USER LASTNAME:'|| tr.last_name);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('USER EMAIL:'|| tr.email);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('USER KYC_STATUS:'||
+      tr.Kyc_status);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('');\r
+
+      \                firstline := 0;\r
+
+      \            end IF;\r
+
+      \            if aux != tr.wallet_id THEN\r
+
+      \                DBMS_OUTPUT.PUT_LINE('  WALLET ID:'|| tr.wallet_id);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('  CURRENCY:'|| tr.currency_code);\r
+
+      \                DBMS_OUTPUT.PUT_LINE('');\r
+
+      \                aux:= tr.wallet_id;\r
+
+      \            end if;\r
+
+      \            DBMS_OUTPUT.PUT_LINE('      TRANSACTION ID:'||
+      tr.transaction_id );\r
+
+      \            DBMS_OUTPUT.PUT_LINE('      TRANSACTION AMOUNT:'||
+      tr.transaction_type );\r
+
+      \            DBMS_OUTPUT.PUT_LINE('      TRANSACTION STATUS:'|| tr.status
+      );\r
+
+      \            DBMS_OUTPUT.PUT_LINE('');\r
+
+      \        end loop;\r
+
+      \    end;\r
+
+      end;    \r
+
+      \r
+
+      \r
+
+      \r
+
+      \            \r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: Implementation de la fonction getAllTransactionByID( user_id )
+    languageId: markdown
+  - kind: 2
+    value: "BEGIN\r
+
+      \    getAllTransactionsById(1);\r
+
+      END;"
     languageId: oracle-sql
   - kind: 2
     value: ""
