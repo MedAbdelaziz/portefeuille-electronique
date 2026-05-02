@@ -1,0 +1,380 @@
+cells:
+  - kind: 1
+    value: creation de la table Users(Utilisateur)
+    languageId: markdown
+  - kind: 2
+    value: "create table users(\r
+
+      \    user_id INTEGER PRIMARY KEY not null,\r
+
+      \    email varchar(255) not null,\r
+
+      \    password_hash varchar(255) not null,\r
+
+      \    first_name varchar(255),\r
+
+      \    last_name varchar(255),\r
+
+      \    kyc_status varchar(255) default 'Pending',\r
+
+      \    is_accredited number DEFAULT 0,\r
+
+      \    created_at DATE ,\r
+
+      \    constraint ck_kyc check(kyc_status in
+      ('Approved','Pending','Rejected'))\r
+
+      \r
+
+      );\r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: creation de la table Wallets(portfeuil electronique)
+    languageId: markdown
+  - kind: 2
+    value: "create table wallets(\r
+
+      \    wallet_id INTEGER PRIMARY KEY not null,\r
+
+      \    user_id INTEGER REFERENCES users(user_id),\r
+
+      \    currency_code VARCHAR(5) DEFAULT 'TND',\r
+
+      \    balance DECIMAL(10,4),\r
+
+      \    status VARCHAR(50) default 'Active' check(status in
+      ('Active','Frozen','closed')) ,\r
+
+      \    created_at DATE,\r
+
+      \    unique(wallet_id,user_id)\r
+
+      );\r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: creation de la table Assets(Actifs)
+    languageId: markdown
+  - kind: 2
+    value: "drop table holdings;\r
+
+      drop table assets;\r
+
+      create table assets(\r
+
+      \    asset_id Integer PRIMARY KEY not null,\r
+
+      \    asset_name VARCHAR(255),\r
+
+      \    asset_type VARCHAR(255) \r
+
+      \    check(asset_type in ('Private
+      Equity','Withdrawal','Deposit','Stocks','Bonds')),\r
+
+      \    total_valuation  DECIMAL(19,4),\r
+
+      \    minimum_investment DECIMAL(10,4),\r
+
+      \    current_status VARCHAR(255),\r
+
+      \    description VARCHAR2(2000),\r
+
+      \    created_at DATE \r
+
+      );\r
+
+      \r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: creation de la table Transactions
+    languageId: markdown
+  - kind: 2
+    value: "create table transactions(\r
+
+      \        transaction_id INTEGER PRIMARY KEY not null,\r
+
+      \        wallet_id INTEGER REFERENCES wallets(wallet_id),\r
+
+      \        transaction_type VARCHAR(255),\r
+
+      \        amount DECIMAL(10,4),\r
+
+      \        running_balance DECIMAL(10,4),\r
+
+      \        status VARCHAR(100) default 'Pending' check(status in
+      ('Pending','Completed','Failed','Reversed')),\r
+
+      \        external_reference_id Integer,\r
+
+      \        description VARCHAR2(2000),\r
+
+      \        created_at TIMESTAMP with time zone default CURRENT_TIMESTAMP \r
+
+      );\r
+
+      \r\n"
+    languageId: oracle-sql
+  - kind: 1
+    value: creation de la table Holdings
+    languageId: markdown
+  - kind: 2
+    value: "\r
+
+      create table holdings(\r
+
+      \    holding_id INTEGER,\r
+
+      \    user_id INTEGER REFERENCES users(user_id),\r
+
+      \    asset_id INTEGER REFERENCES assets(asset_id),\r
+
+      \    quantity INTEGER,\r
+
+      \    average_purchase_price DECIMAL(10,4),\r
+
+      \    last_updated_at TIMESTAMP\r
+
+      );"
+    languageId: oracle-sql
+  - kind: 1
+    value: remplissage de la table Users
+    languageId: markdown
+  - kind: 2
+    value: "INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (1, 'ahmed.m@email.com',
+      'hash123', 'Ahmed', 'Mansour', 'Approved', 1, DATE '2023-01-15');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (2, 'fatma.t@email.com',
+      'hash124', 'Fatma', 'Trabelsi', 'Pending', 0, DATE '2023-02-10');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (3, 'youssef.b@email.com',
+      'hash125', 'Youssef', 'Bouazizi', 'Approved', 1, DATE '2023-03-05');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (4, 'sarah.k@email.com',
+      'hash126', 'Sarah', 'Khemiri', 'Approved', 0, DATE '2023-04-20');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (5, 'mehdi.j@email.com',
+      'hash127', 'Mehdi', 'Jaziri', 'Rejected', 0, DATE '2023-05-12');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (6, 'leila.a@email.com',
+      'hash128', 'Leila', 'Ammar', 'Approved', 1, DATE '2023-06-18');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (7, 'karim.s@email.com',
+      'hash129', 'Karim', 'Sassi', 'Pending', 0, DATE '2023-07-22');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (8, 'amira.d@email.com',
+      'hash130', 'Amira', 'Driss', 'Approved', 0, DATE '2023-08-05');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (9, 'nabil.g@email.com',
+      'hash131', 'Nabil', 'Gharbi', 'Approved', 1, DATE '2023-09-11');\r
+
+      INSERT INTO users (user_id, email, password_hash, first_name, last_name,
+      kyc_status, is_accredited, created_at) VALUES (10, 'rym.h@email.com',
+      'hash132', 'Rym', 'Haddad', 'Pending', 0, DATE '2023-10-01');"
+    languageId: oracle-sql
+  - kind: 1
+    value: remplissage de la table Wallets
+    languageId: markdown
+  - kind: 2
+    value: "INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (1, 1, 'TND', 15000.5000, 'Active', DATE
+      '2023-01-16');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (2, 1, 'EUR', 4500.0000, 'Active', DATE
+      '2023-01-20');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (3, 2, 'TND', 300.0000, 'Active', DATE '2023-02-11');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (4, 3, 'TND', 25000.0000, 'Active', DATE
+      '2023-03-06');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (5, 3, 'USD', 8000.0000, 'Active', DATE
+      '2023-03-10');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (6, 4, 'TND', 1200.7500, 'Active', DATE
+      '2023-04-21');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (7, 5, 'TND', 0.0000, 'Frozen', DATE '2023-05-13');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (8, 6, 'EUR', 12000.0000, 'Active', DATE
+      '2023-06-19');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (9, 6, 'USD', 500.0000, 'closed', DATE '2023-06-25');\r
+
+      INSERT INTO wallets (wallet_id, user_id, currency_code, balance, status,
+      created_at) VALUES (10, 8, 'TND', 5400.2000, 'Active', DATE
+      '2023-08-06');"
+    languageId: oracle-sql
+  - kind: 1
+    value: remplissage de la table Assets
+    languageId: markdown
+  - kind: 2
+    value: "INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (1,
+      'Global Tech ETF', 'Stocks', 5000000.00, 100.00, 'Trading', 'Exchange
+      traded fund for global technology companies.', DATE '2022-01-01');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (2,
+      'Tunisian Treasury 5Y', 'Bonds', 10000000.00, 1000.00, 'Active', '5-year
+      government bonds.', DATE '2022-06-15');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (3,
+      'Sfax Real Estate Fund', 'Private Equity', 2500000.00, 5000.00, 'Raising',
+      'Commercial real estate development in Sfax.', DATE '2023-02-01');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (4,
+      'Green Energy Index', 'Stocks', 3000000.00, 50.00, 'Trading', 'Index
+      tracking renewable energy stocks.', DATE '2022-08-20');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (5,
+      'Corporate Bond Series A', 'Bonds', 1500000.00, 500.00, 'Active',
+      'High-yield corporate debt.', DATE '2023-01-10');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (6,
+      'Agri-Tech Startup Seed', 'Private Equity', 800000.00, 10000.00, 'Closed',
+      'Seed round for agricultural technology firm.', DATE '2023-05-05');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (7,
+      'Healthcare Dividend Fund', 'Stocks', 4500000.00, 150.00, 'Trading', 'High
+      dividend healthcare equities.', DATE '2022-11-11');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (8,
+      'Municipal Water Bond', 'Bonds', 2000000.00, 1000.00, 'Active',
+      'Infrastructure improvement bond.', DATE '2023-03-30');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (9,
+      'E-Commerce Venture', 'Private Equity', 1200000.00, 25000.00, 'Raising',
+      'Series A funding for regional e-commerce.', DATE '2023-09-01');\r
+
+      INSERT INTO assets (asset_id, asset_name, asset_type, total_valuation,
+      minimum_investment, current_status, description, created_at) VALUES (10,
+      'Emerging Markets ETF', 'Stocks', 6000000.00, 75.00, 'Trading',
+      'Diversified emerging markets portfolio.', DATE '2022-04-14');"
+    languageId: oracle-sql
+  - kind: 1
+    value: remplissage de la table Transactions
+    languageId: markdown
+  - kind: 2
+    value: "INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (1, 1, 'Wire Deposit', 10000.00, 10000.00, 'Completed',
+      9901, 'Initial account funding', TIMESTAMP '2023-01-16 10:00:00
+      +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (2, 1, 'Asset Purchase', -2000.00, 8000.00,
+      'Completed', 9902, 'Bought Tech ETF', TIMESTAMP '2023-01-18 14:30:00
+      +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (3, 1, 'Wire Deposit', 7000.50, 15000.50, 'Completed',
+      9903, 'Salary deposit', TIMESTAMP '2023-02-01 09:15:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (4, 2, 'SEPA Transfer', 4500.00, 4500.00, 'Completed',
+      9904, 'EUR funding', TIMESTAMP '2023-01-20 11:00:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (5, 3, 'Card Deposit', 300.00, 300.00, 'Completed',
+      9905, 'Debit card top-up', TIMESTAMP '2023-02-11 16:45:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (6, 4, 'Wire Deposit', 25000.00, 25000.00, 'Completed',
+      9906, 'Investment capital', TIMESTAMP '2023-03-06 10:20:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (7, 5, 'SWIFT Transfer', 8000.00, 8000.00, 'Completed',
+      9907, 'USD funding', TIMESTAMP '2023-03-10 13:10:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (8, 7, 'Suspicious Activity', 0.00, 0.00, 'Failed',
+      9908, 'Account frozen due to KYC issues', TIMESTAMP '2023-05-13 08:00:00
+      +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (9, 8, 'Asset Dividend', 500.00, 12500.00, 'Pending',
+      9909, 'Dividend payout', TIMESTAMP '2023-06-20 09:00:00 +01:00');\r
+
+      INSERT INTO transactions (transaction_id, wallet_id, transaction_type,
+      amount, running_balance, status, external_reference_id, description,
+      created_at) VALUES (10, 9, 'Withdrawal', -500.00, 0.00, 'Completed', 9910,
+      'Account closure withdrawal', TIMESTAMP '2023-06-25 15:30:00 +01:00');"
+    languageId: oracle-sql
+  - kind: 1
+    value: remplissage de la table Holdings
+    languageId: markdown
+  - kind: 2
+    value: "INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (1, 1, 1, 20, 100.00,
+      TIMESTAMP '2023-01-18 14:30:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (2, 1, 2, 5, 1000.00,
+      TIMESTAMP '2023-02-15 10:00:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (3, 3, 3, 1, 5000.00,
+      TIMESTAMP '2023-03-15 11:20:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (4, 3, 4, 100, 52.50,
+      TIMESTAMP '2023-04-10 09:45:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (5, 3, 5, 10, 500.00,
+      TIMESTAMP '2023-04-12 15:30:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (6, 4, 1, 10, 105.00,
+      TIMESTAMP '2023-04-22 10:15:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (7, 6, 2, 12, 995.00,
+      TIMESTAMP '2023-06-20 14:00:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (8, 6, 7, 50, 155.00,
+      TIMESTAMP '2023-07-01 11:10:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (9, 8, 4, 30, 48.00,
+      TIMESTAMP '2023-08-10 09:30:00');\r
+
+      INSERT INTO holdings (holding_id, user_id, asset_id, quantity,
+      average_purchase_price, last_updated_at) VALUES (10, 9, 3, 2, 5000.00,
+      TIMESTAMP '2023-09-15 13:45:00');"
+    languageId: oracle-sql
+  - kind: 2
+    value: ""
+    languageId: oracle-sql

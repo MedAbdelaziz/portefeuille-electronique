@@ -1,0 +1,74 @@
+@startuml
+left to right direction 
+actor "Investor" as inv
+left to right direction
+actor "Portfolio manager" as pm
+left to right direction 
+actor "Admin" as adm
+left to right direction 
+actor "User" as user
+'Onboarding (elemental) features
+rectangle portfolio-manager {
+    usecase "sign-up" as UC01
+    usecase "sign-in" as UC02
+    usecase "Verify digital indentity using KYC" as UC03
+    'KYC(know your customer) and AML(anti-money laundering) 
+    'using AI and facial biometrics
+    usecase "go through Inverstor Suitability Profiling" as UC04
+    'Questionnaire to check the investor financial knoweldge and risk tolerance
+    usecase "sign agreements" as UC05
+    usecase "sign legal disclosure" as UC06
+    usecase "sign prospectus" as UC07
+    usecase "E-signature" as UC08   
+    usecase "deposit money" as UC09
+    usecase "withdraw money" as UC010
+}
+actor "Plaid/Stripe service" as ser1 #PaleGreen;line:PaleGreen;line.bold;text:green
+'banking core features
+rectangle portfolio-manager {
+    usecase "create a profile" as UC11
+    usecase "create a mutlitcurrency wallet " as UC12
+    usecase "connect to bank account" as UC13 
+    'using plaid/stripe
+    usecase "view portfolio performance" as UC14
+    usecase "buy an asset" as UC15
+}
+'stock trading features 
+rectangle portfolio-manager {
+    usecase  "follow a specific fund or client performance"as UC21
+    usecase "set investment strategy for client " as UC22
+    usecase "rebalance assets" as UC23
+}
+rectangle portfolio-manager {
+    usecase "review transactions log" as UC31
+    usecase "update the master list of assets" as UC32
+    usecase "verify KYC approval" as UC33
+}
+
+
+user --> UC05 
+user -->UC06
+user --> UC07
+UC05 ..> UC08: include
+UC06 ..> UC08: include
+UC07 ..> UC08: include
+inv --> UC11 
+UC11 ..> UC01:include
+UC01 ..> UC03:include
+inv --> UC12
+UC12 ..> UC04 : include
+UC12 ..> UC13:include
+:ser1:-up->UC13
+UC13<..UC09:extend
+UC13<..UC010:extend
+inv-->UC14
+inv --> UC15
+inv--|>user
+pm--|>user
+pm -->UC21
+pm -->UC22
+pm -->UC23
+adm -->UC31
+adm -->UC32
+adm -->UC33
+@enduml

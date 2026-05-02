@@ -1,0 +1,96 @@
+@startuml
+class Users {
+    {static}#user_id 
+    email 
+    password 
+    first_name 
+    last_name 
+    kyc_status
+    is_accredited 
+    created_at 
+    updated_at 
+}
+class Wallets {
+    {static}+wallet_id 
+    #user_id 
+    currency_code 
+    balance 
+    status 
+    created_at
+}
+class Transactions {
+    {static}transaction_id 
+    +wallet_id 
+    transaction_type
+    amount
+    running_balance    
+    status 
+    external_reference_id
+    description 
+    created_at 
+}
+class Assets {
+    {static}-asset_id
+    asset_name
+    asset_type
+    total_valuation
+    minimum_investment
+    current_status 
+    description 
+    created_at
+}
+class Holdings{
+    {static}holding_id 
+    #user_id 
+    -asset_id 
+    quantity 
+    average_purchase_price     
+    last_updated_at
+}
+Wallets "1"-->"0..*" Transactions : make
+Users "1"-->"0..*" Wallets: manage
+Users "1" - "0..*" Assets
+(Users,Assets ) ..Holdings
+
+ 
+
+@enduml
+' @startuml
+' class Student {
+'   Name
+' }
+' Student "0..*" - "1..*" Course
+' (Student, Course) .. Enrollment
+
+' class Enrollment {
+'   drop()
+'   cancel()
+' }
+' @enduml
+
+' @startuml
+
+' class Machin {
+'  -champ1
+'  #champ2
+'  ~methode1()
+'  +methode2()
+' }
+
+' @enduml
+' @startuml
+' Object <|-- ArrayList
+
+' Object : equals()
+' ArrayList : Object[] elementData
+' ArrayList : size()
+
+' @enduml
+' @startuml
+' Class11 <|.. Class12
+' Class13 --> Class14
+' Class15 ..> Class16
+' Class17 ..|> Class18
+' Class19 <--* Class20
+' @enduml
+
